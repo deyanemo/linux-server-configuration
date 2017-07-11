@@ -460,11 +460,6 @@ We will use pip to install virtualenv and Flask. If pip is not installed, instal
 
     sudo apt-get install python-pip
     sudo pip install virtualenv
-
-
-
-
-
     sudo virtualenv venv
 
 
@@ -501,7 +496,6 @@ To deactivate the environment
 
 ###  New Virtual Host
 run the following commands to configure the apache sites
-
 
 
     sudo nano /etc/apache2/sites-available/FlaskApp.conf
@@ -566,7 +560,7 @@ paste inside it :
 
 
 
-    at last retart apache to changes takes effects :
+at last retart apache to changes takes effects :
 
 
 
@@ -574,6 +568,9 @@ paste inside it :
     sudo service apache2 restart
 
 
+# Finally :
+
+serve the app : http://104.197.229.70/
 
 
 ###  refrencess :
