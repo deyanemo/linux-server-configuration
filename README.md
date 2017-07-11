@@ -30,23 +30,23 @@ first step is to create a RSA public key (never do this on the server!):
 
 create and .ssh folder :
 
-
 '''
+
     mkdir .ssh
 
 '''
 give it prommesion of 600:
 
-
 '''
+
     sudo chmod 600 .ssh
 
 '''
 
 now lets create the key:
 
-
 '''
+
     ssh-keygen
 
 '''
@@ -56,10 +56,9 @@ then the keyphrase
 
 give it a premmsion 400 if the you got a error that its too open
 
-
 '''
-    sudo chmod 400 /.ssh/~key~
 
+    sudo chmod 400 /.ssh/~key~
 
 '''
 very important note ~
@@ -78,7 +77,6 @@ and you are good to go
 ###  SSH
 the RSA key we created it befor
 
-
 '''
 
     ssh root@104.197.229.70 -i ~/.ssh/nemo
@@ -90,11 +88,9 @@ the RSA key we created it befor
 
 once logged in create a new user with name grader
 
-
 '''
 
     adduser grader
-
 
 '''
 dont worry about the password you can set it what you want
@@ -103,23 +99,19 @@ dont worry about the password you can set it what you want
 create a user instance
 and edit it :
 
-
 '''
 
     touch /etc/sudoers.d/grader
     nano /etc/sudoers.d/grader
-
 
 '''
 
 type inside the following :
 
 
-
 '''
 
     grader ALL=(ALL) NOPASSWD:ALL
-
 
 '''
 
@@ -132,15 +124,15 @@ note : if you using google cloud skip this if you done the previos step
 other lets continue :
 Next, add the ssh authorized key for the new user. Temporarily log in as the new user:
 
-
 '''
+
     sudo -su grader
 
 '''
 
 Create the .ssh directory and the authorized_keys file:
-
 '''
+
     cd /home/grader
 
     mkdir .ssh
@@ -156,8 +148,8 @@ and paste the publickey.pub you will find it in the .ssh folder
 
 Set the ssh file permissions:
 
-
 '''
+
     chmod 700 .ssh
     chmod 644 .ssh/authorized_keys
 
@@ -166,10 +158,9 @@ Set the ssh file permissions:
 
 test the connection :
 
-
 '''
-    ssh grader@104.197.229.70 -i ~/.ssh/nemo.rsa
 
+    ssh grader@104.197.229.70 -i ~/.ssh/nemo.rsa
 
 '''
 
@@ -178,8 +169,8 @@ test the connection :
 
 type the following command
 
-
 '''
+
     sudo apt-get update
     sudo apt-get upgrade
 
@@ -188,15 +179,15 @@ type the following command
 let it run
 
 Now to allow security updats install the package
-
 '''
+
     sudo apt-get install unattended-upgrades
 
 '''
 and enable it :
 
-
 '''
+
     sudo dpkg-reconfigure --priority-low unattended-upgrades
 
 '''
@@ -205,23 +196,23 @@ and enable it :
 to change the ssh default port from 22 to 2200
 edit the following file :
 
-
 '''
+
     sudo nano /etc/ssh/sshd_config
 
 '''
 
 change it to the following
-
 '''
+
     Port 2200
 
 '''
 
 ###  Remove Root Login :
 change the following to no:
-
 '''
+
     #Authentication:
     PermitRootLogin no
 
@@ -230,8 +221,8 @@ change the following to no:
 ###  force ssh login :
 change the following to:
 
-
 '''
+
     # Change to no to disable tunnelled clear text passwords
     PasswordAuthentication no
 
@@ -241,8 +232,8 @@ save and edit
 
 now restart the service:
 
-
 '''
+
     sudo service ssh restart
 
 ''''
@@ -254,8 +245,8 @@ NOTE: please be carefull with this and conform that you still can accees the use
 
 Configure (UFW) to only allow incoming connections for SSH (port 2200), HTTP (port 80), and NTP (port 123):
 
-
 '''
+
     sudo ufw default deny incoming
 
     sudo ufw allow 2200
@@ -271,20 +262,20 @@ Configure (UFW) to only allow incoming connections for SSH (port 2200), HTTP (po
 
 NOTE: this is not enough if you using google cloud you should do the following :
 
-
 '''
+
     gcloud compute firewall-rules create ssh --allow tcp:2200
 
 '''
 
-
 '''
+
     gcloud compute firewall-rules create www --allow tcp:80
 
 '''
 
-
 '''
+
     gcloud compute firewall-rules create ntp --allow tcp:123
 
 '''
@@ -300,16 +291,16 @@ for more information please the the refrencess section bellow
 
 block IP addresses that fail to correctly log in
 
-
 '''
+
     sudo apt-get install fail2ban
 
 '''
 
 next :
 
-
 '''
+
     sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
     sudo nano /etc/fail2ban/jail.local
 
@@ -318,8 +309,8 @@ next :
 update it as the following :
 
 
-
 '''
+
     [ssh]
 
     enabled  = true
@@ -333,8 +324,8 @@ update it as the following :
 
 create the ufw ssh action referenced:
 
-
 '''
+
     sudo touch /etc/fail2ban/action.d/ufw-ssh.conf
     sudo nano /etc/fail2ban/action.d/ufw-ssh.conf
 
@@ -342,8 +333,8 @@ create the ufw ssh action referenced:
 
 define it as following :
 
-
 '''
+
     [Definition]
     actionstart =
     actionstop =
@@ -355,8 +346,8 @@ define it as following :
 finally :
 
 
-
 '''
+
     sudo service fail2ban restart
 
 
@@ -365,8 +356,8 @@ finally :
 ###  Set Local Timezone :
 
 run the following command and chooce UTC
-
 '''
+
     sudo dpkg-reconfigure tzdata
 
 '''
@@ -375,8 +366,8 @@ run the following command and chooce UTC
 
 installing apache
 
-
 '''
+
  sudo apt-get install apache2
 
 '''
@@ -385,22 +376,24 @@ installing apache
 
 run :
 
-
 '''
+
     sudo apt-get install libapache2-mod-wsgi python-dev
 
 '''
+
 enable it :
 
 '''
+
     sudo a2enmod wsgi
 
 '''
 
 start or restart apache :
 
-
 '''
+
     sudo service apache2 start
 
 '''
@@ -410,14 +403,14 @@ start or restart apache :
 
 Use the following command to move to the /var/www directory:
 
-
 '''
+
     cd /var/www
 
 '''
 
-
 '''
+
     mkdir flaskApp
     cd flaskApp
 
@@ -425,8 +418,8 @@ Use the following command to move to the /var/www directory:
 
 git clone the app :
 
-
 '''
+
     git clone https://github.com/deyanemo/Item-Catalog.git flaskApp
 
 
@@ -436,16 +429,16 @@ git clone the app :
 Now, create the __init__.py file that will contain the flask application logic.
 
 
-
 '''
+
     sudo nano __init__.py
 
 '''
 
 Add following logic to the file:
 
-
 '''
+
     from flask import Flask
     app = Flask(__name__)
     @app.route("/")
@@ -453,7 +446,6 @@ Add following logic to the file:
         return "Hello, I love Digital Ocean!"
     if __name__ == "__main__":
         app.run()
-
 
 '''
 
@@ -464,45 +456,45 @@ Save and close the file.
 
 We will use pip to install virtualenv and Flask. If pip is not installed, install it on Ubuntu through apt-get.
 
-
 '''
+
     sudo apt-get install python-pip
     sudo pip install virtualenv
 
 '''
 
-
 '''
+
     sudo virtualenv venv
 
 '''
 
 Now, install Flask in that environment by activating the virtual environment with the following command:
-
 '''
+
     source venv/bin/activate
 
 '''
-install Flask
-
+### install Flask
 
 '''
+
     sudo pip install Flask
 
 '''
 
 change the app name :
 
-
 '''
+
     sudo python __init__.py
 
 '''
 
 To deactivate the environment
 
-
 '''
+
     deactivate
 
 '''
@@ -510,16 +502,16 @@ To deactivate the environment
 ###  New Virtual Host
 run the following commands to configure the apache sites
 
-
 '''
+
     sudo nano /etc/apache2/sites-available/FlaskApp.conf
 
 '''
 
 paste inside of it the following after changing your apps prefixes :
 
-
 '''
+
     <VirtualHost *:80>
             ServerName mywebsite.com
             ServerAdmin admin@mywebsite.com
@@ -544,8 +536,8 @@ Save and close the file.
 
 now we will enable the virtual host :
 
-
 '''
+
     sudo a2ensite FlaskApp
 
 '''
@@ -553,16 +545,16 @@ now we will enable the virtual host :
 
 Apache uses the .wsgi file to serve the Flask app. Move to the /var/www/FlaskApp
 
-
 '''
+
     cd /var/www/FlaskApp
     sudo nano flaskapp.wsgi
 
 '''
 paste inside it :
 
-
 '''
+
     #!/usr/bin/python
     import sys
     import logging
@@ -572,13 +564,13 @@ paste inside it :
     from FlaskApp import app as application
     application.secret_key = 'Add your secret key'
 
-    '''
+'''
 
     at last retart apache to changes takes effects :
 
 
-
 '''
+
     sudo service apache2 restart
 
 '''
